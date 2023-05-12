@@ -72,4 +72,27 @@ std::vector<Card>::const_iterator Hand::end() const
 
 
 // Insertion operator to print a hand
-std::ostream& operator<<(std::ostream &os, const Hand &hand);
+std::ostream& operator<<(std::ostream &os, const Hand &hand)
+{
+    auto itr = hand.begin();
+
+    if(hand.revealed()) {
+        os << *itr << ' ';
+    } else {
+        os << "### ";
+    }
+    
+    for(itr++; itr != hand.end(); itr++) {
+        os << *itr << ' ';
+    }
+
+    if(hand.revealed()) {
+        os << hand.hard();
+        int soft = hand.soft();
+        if(soft) {
+            os << " / " << soft;
+        }
+    }
+
+    return os;
+}
