@@ -1,4 +1,4 @@
-CXXFLAGS=-g --std=c++11
+CXXFLAGS=-g --std=c++20
 
 blackjack: blackjack.o card.o shoe.o hand.o
 	g++ -o $@ $^ $(CXXFLAGS)
