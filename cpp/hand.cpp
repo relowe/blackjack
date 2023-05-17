@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <string>
 #include "hand.h"
 
 Hand::Hand(const Card &down, const Card &up)
@@ -53,8 +54,31 @@ int Hand::soft() const
 //receive a hit
 void Hand::hit(const Card &card)
 {
+    int value; //numeric value of the currecnt card
+    std::string face = card.value();
+             
     _cards.push_back(card);
-    // TODO score
+   
+    //get the card's value
+    if(face == "A") {
+        value = 1;
+    } else if(face == "J" or face == "Q" or face == "K") {
+        value = 10;
+    } else {
+        value = std::stoi(face);
+    }
+
+    //add to the hard score
+    _hard += value;
+   
+    if(_soft or value == 1) {
+        _soft = _hard + 10;
+    }
+
+    //reset a busted soft
+    if(_soft>21) {
+        _soft = 0;
+    }
 }
 
 

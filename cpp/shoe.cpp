@@ -6,9 +6,9 @@
 #include "shoe.h"
 
 static const std::vector<char> card_suits {'S', 'C', 'D', 'H'};
-static const std::vector<const char*> card_faces{"A", "1", "2", "3", "4", 
-                                                       "5", "6", "7", "8", "9", 
-                                                       "10", "J", "Q", "K"};
+static const std::vector<const char*> card_faces{"A", "2", "3", "4", 
+                                                 "5", "6", "7", "8", "9", 
+                                                 "10", "J", "Q", "K"};
 
 // create a shoe of n decks
 Shoe::Shoe(int n) 
