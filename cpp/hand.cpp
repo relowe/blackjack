@@ -100,22 +100,27 @@ std::ostream& operator<<(std::ostream &os, const Hand &hand)
 {
     auto itr = hand.begin();
 
+    // print the first card
     if(hand.revealed()) {
         os << *itr << ' ';
     } else {
         os << "### ";
     }
     
+    //print the rest of the cards
     for(itr++; itr != hand.end(); itr++) {
         os << *itr << ' ';
     }
 
+    //print the score for revealed hands
     if(hand.revealed()) {
+        os << "(";
         os << hand.hard();
         int soft = hand.soft();
         if(soft) {
             os << " / " << soft;
         }
+        os << ")";
     }
 
     return os;

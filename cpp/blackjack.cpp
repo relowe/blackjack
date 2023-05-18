@@ -29,6 +29,13 @@ int main()
         std::cout << "You have $" << money << std::endl;
     } while(money > 5.0 and get_continue());
 
+    std::cout << std::endl;   // a blank line to space things out
+
+    //print consoluation
+    if(money < 5) {
+        std::cout << "Awww.... better luck next time!" << std::endl;
+    }
+
     std::cout << "Thank you for playing!" << std::endl;
 }
 
@@ -74,7 +81,7 @@ void play_hand(double &money, Shoe &shoe)
             money += bet;
         } else if(dealer.point() < player.point()) {
             if(player.point() == 21) { 
-                std::cout << "Blackjack!" << std::endl;
+                std::cout << "You have Blackjack!" << std::endl;
             }
             std::cout << "You Win!" << std::endl;
             money += bet;
@@ -91,6 +98,8 @@ void play_hand(double &money, Shoe &shoe)
 
 void dealer_hand(Hand &hand, Shoe &shoe)
 {
+    std::cout << std::endl;  // blank line to space things out a little
+
     while(hand.point() < 17 or hand.soft() == 17) {
         std::cout << "Dealer Hits" << std::endl;
         hand.hit(shoe.deal());
@@ -109,6 +118,8 @@ double get_bet(double money)
 {
     double bet;
     bool done = false;
+
+    std::cout << std::endl;  // blank line to space things out a little
 
     do {
         std::cout << "You have $" << money << " Enter bet (Minimum $5.00): ";
@@ -132,6 +143,8 @@ bool get_hit()
 {
     bool done = false;
     char c;
+
+    std::cout << std::endl;  // blank line to space things out a little
 
     do {
         //get user's choice
@@ -157,6 +170,8 @@ bool get_continue()
 {
     bool done = false;
     char c;
+
+    std::cout << std::endl;  // blank line to space things out a little
 
     do {
         //get user's choice
