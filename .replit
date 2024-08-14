@@ -3,6 +3,7 @@ run = "cowsay \"run from the shell\""
 hidden = ["bin", "obj"]
 
 [env]
+PATH="${REPL_HOME}/.local/bin:."
 DOTNET_NOLOGO = "1"
 DOTNET_CLI_TELEMETRY_OPTOUT = "1"
 

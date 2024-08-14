@@ -1,5 +1,7 @@
 { pkgs }: {
 	deps = [
+   pkgs.gnum4
+   pkgs.ruby
    pkgs.neo-cowsay
    pkgs.texinfoInteractive
    pkgs.gnu-smalltalk
