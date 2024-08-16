@@ -6,6 +6,7 @@ hidden = ["bin", "obj"]
 PATH="${REPL_HOME}/.local/bin:."
 DOTNET_NOLOGO = "1"
 DOTNET_CLI_TELEMETRY_OPTOUT = "1"
+SNOLIB="${REPL_HOME}/.local/lib/snobol4/"
 
 [packager]
 language = "dotnet"
