@@ -1,0 +1,138 @@
+* Blackjack - Implemented in snobol4 by pngwen < pngwen@acm.org >
+-INCLUDE 'random.sno'
+        srandomdev()
+
+* Card data type and functions
+        data('card(value,suit)')
+        
+        define('cardpts(c)')                        :(ecardpts)
+cardpts cardpts = integer(value(c)) value(c)        :s(return)
+        cardpts = ident(value(c), 'A') 1            :s(return)
+        cardpts = 10                                :(return)
+ecardpts
+
+        define('cardstr(c)')                        :(ecardstr)
+cardstr cardstr = value(c) suit(c)                  :(return)
+ecardstr
+
+* Create The Deck
+dinit   deck = array(52)
+        di = 1
+        suits = 'SCHD'
+sloop   suits len(1) . s rem . suits                :f(esloop)
+        vals = "A 2 3 4 5 6 7 8 9 10 J Q K "
+vloop   vals break(" ") . v span(" ") rem . vals    :f(sloop)
+        deck<di> = card(v,s)
+        di = di + 1                                 :(vloop)
+esloop  di = 1
+
+* shuffle the deck
+shuffle n = 7
+shufitr i = 1
+shuflop j = remdr(random(),52) + 1
+        t = deck<i>
+        deck<i> = deck<j>
+        deck<j> = t
+        i = lt(i,52) i + 1                          :s(shuflop)
+        n = gt(n,0) n - 1                           :s(shufitr)
+
+* Deal a card from the deck
+        define('deal()')                            :(edeal)
+deal    deal = le(di,52) deck<di>                   :f(freturn)
+        di = di + 1                                 :(return)
+edeal
+
+* store and operate on hands
+        data('hand(cards,last,show,hard,soft)')
+
+        define('hit(h)p,c')                        :(ehit)
+hit     c = deal()
+        last(h) = last(h) + 1
+        cards(h)<last(h)> = c
+        p = cardpts(c)
+        hard(h) = hard(h) + p
+        soft(h) = eq(p,1) 1
+        soft(h) = gt(soft(h),0) hard(h) + 10        
+        soft(h) = gt(soft(h),21) 0                  :(return)
+ehit
+
+        define('handstr(h)i')                       :(ehandstr)
+handstr handstr = ""
+        cstr = le(1,last(h)) cardstr(cards(h)<1>)   :f(ehsloop)
+        handstr = handstr cstr " "
+        i = 2
+hsloop  le(i, last(h))                              :f(ehsloop)
+        cstr = cardstr(cards(h)<i>)
+        cstr = differ(show(h),1) "###"
+        handstr = handstr cstr " "
+        i = i + 1                                   :(hsloop)
+ehsloop handstr = eq(show(h),1) handstr "(" hard(h) ")"
+        handstr ")" = eq(show(h),1) gt(soft(h), 0) " / " soft(h) ")"
+                                                    :(return)
+ehandstr
+
+        define('score(h)')                          :(escore)
+score   score = hard(h)
+        score = gt(soft(h), score) soft(h)          :(return)
+escore
+
+* start the game
+start   output = "Welcome to Blackjack!"
+        output = "   Dealer hits on soft 17."
+        output = "Please play responsibly!"
+        money = 100
+
+bet     output = "" 
+        output = "You have $" money ".00 Enter bet (Minimum $5.00)"
+        bet = input
+        integer(bet) ge(bet, 5) le(bet, money)      :s(play)
+        output = "Invalid Bet, Please try again."   :(bet)
+        
+
+* play a hand
+play    dealer = hand(array(20),0,0,0,0)
+        player = hand(array(20),0,1,0,0)
+        hit(player)
+        hit(dealer)
+        hit(player)
+        hit(dealer)
+        
+pbuild  output = "Dealer: " handstr(dealer)
+        output = "You: " handstr(player)
+        output = eq(score(player),21) "You have blackjack!" :s(dbuild)
+        output = gt(score(player),21) "You bust."           :s(lose)
+        output = "Do you want to (S)tand or (H)it?"
+        choice = input
+        ident(choice,"H") hit(player)                       :s(pbuild)
+        output = differ(choice,"S") "Invalid Selection, please try again."   :s(pbuild)
+
+dbuild  show(dealer) = 1
+        output = "Dealer: " handstr(dealer)
+        output = eq(score(dealer),21) "Dealer has blackjack." :s(dstand)
+        output = gt(score(dealer),21) "Dealer busts!"         :s(win)
+        output = "You: " handstr(player)
+        lt(score(dealer), 17)                       :s(dhit)
+        eq(soft(dealer), 17)                        :s(dhit) f(dstand)
+dhit    output = "Dealer Hits!"                     
+        hit(dealer)                                 :(dbuild)
+
+dstand  gt(score(player), score(dealer))            :s(win)
+        eq(score(player), score(dealer))            :s(push)
+
+lose    output = "You lose $" bet ".00"
+        money = money - bet                         :(again)
+
+win     output = "You win $" bet ".00"
+        money = money + bet                         :(again)
+
+push    output = "It's a push!"
+
+again   output = lt(money,5) "Awww.... better luck next time!" :s(finish)
+        output = "You have $" money ".00 play again? (Y/N)"
+        choice = input
+        ident(choice,"Y")                           :s(bet)
+        ident(choice,"N")                           :s(finish)
+        output = "Invalid choice, please try again." :(again)
+
+finish  output = "Thank you for playing!"
+end
