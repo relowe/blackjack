@@ -1,4 +1,5 @@
 * Blackjack - Implemented in snobol4 by pngwen < pngwen@acm.org >
+* This has been tested in csnobol4, your mileage may vary with others
 -INCLUDE 'random.sno'
         srandomdev()
 
@@ -87,7 +88,6 @@ bet     output = ""
         bet = input
         integer(bet) ge(bet, 5) le(bet, money)      :s(play)
         output = "Invalid Bet, Please try again."   :(bet)
-        
 
 * play a hand
 play    dealer = hand(array(20),0,0,0,0)
